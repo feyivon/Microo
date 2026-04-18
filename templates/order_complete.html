@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="our_mics">
+    <div class="container" style="padding-bottom: 80px;">
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+
+                <!-- Success Message -->
+                <div class="titlepage text_align_center">
+                    <h2>🎉 Order Placed!</h2>
+                    <p>Thank you {{ order.full_name }}, your order has been received.</p>
+                </div>
+
+                <!-- Order Info -->
+                <div style="border: 2px solid purple;
+                            border-radius: 15px;
+                            padding: 30px;
+                            margin-top: 30px;">
+
+                    <h4 style="font-weight: bold; color: purple;">
+                        Order #{{ order.id }}
+                    </h4>
+
+                    <hr style="border-color: purple;">
+
+                    <!-- Order Details -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Name:</strong> {{ order.full_name }}</p>
+                            <p><strong>Email:</strong> {{ order.email }}</p>
+                            <p><strong>Phone:</strong> {{ order.phone_number }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Address:</strong> {{ order.address }}</p>
+                            <p><strong>City:</strong> {{ order.city }}, {{ order.state }}</p>
+                            <p><strong>Country:</strong> {{ order.country }}</p>
+                        </div>
+                    </div>
+
+                    <hr style="border-color: purple;">
+
+                    <!-- Payment + Status -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>
+                                <strong>Payment Method:</strong>
+                                {% if order.payment_method == 'paystack' %}
+                                    💳 Paystack
+                                {% else %}
+                                    💵 Pay on Delivery
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <strong>Status:</strong>
+                                <span style="background: purple;
+                                             color: #fff;
+                                             padding: 3px 12px;
+                                             border-radius: 20px;
+                                             font-size: 13px;">
+                                    {{ order.status }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr style="border-color: purple;">
+
+                    <!-- Ordered Items -->
+                    <h5 style="font-weight: bold;">Items Ordered</h5>
+                    <table class="table table-bordered text-center mt-3">
+                        <thead style="background: purple; color: #fff;">
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order_items %}
+                            <tr>
+                                <td class="align-middle">
+                                    {{ item.product.product_name }}
+                                </td>
+                                <td class="align-middle">
+                                    ₦{{ item.price }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ item.quantity }}
+                                </td>
+                                <td class="align-middle"
+                                    style="color: purple; font-weight: bold;">
+                                    ₦{{ item.sub_total }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot style="background: #f8f8f8;">
+                            <tr>
+                                <td colspan="3" class="text-right">
+                                    <strong>Grand Total</strong>
+                                </td>
+                                <td style="color: purple;
+                                           font-weight: bold;
+                                           font-size: 18px;">
+                                    ₦{{ order.total }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+
+                <!-- ✅ Updated Action Buttons — 3 buttons -->
+                <div class="row mt-4">
+
+                    <!-- Continue Shopping -->
+                    <div class="col-md-4 mb-2">
+                        <a href="{% url 'shop' %}"
+                           class="btn"
+                           style="border: 2px solid purple;
+                                  color: purple;
+                                  border-radius: 25px;
+                                  padding: 10px 15px;
+                                  font-weight: bold;
+                                  width: 100%;
+                                  text-align: center;">
+                            ← Shop
+                        </a>
+                    </div>
+
+                    <!-- ✅ Track Order — now links correctly -->
+                    <div class="col-md-4 mb-2">
+                        <a href="{% url 'track_order' %}"
+                           class="btn"
+                           style="background: linear-gradient(to right, red, purple);
+                                  color: #fff;
+                                  border-radius: 25px;
+                                  padding: 10px 15px;
+                                  font-weight: bold;
+                                  width: 100%;
+                                  text-align: center;">
+                            📦 Track Order
+                        </a>
+                    </div>
+
+                    <!-- ✅ My Orders — new button -->
+                    <div class="col-md-4 mb-2">
+                        <a href="{% url 'my_orders' %}"
+                           class="btn"
+                           style="border: 2px solid purple;
+                                  color: purple;
+                                  border-radius: 25px;
+                                  padding: 10px 15px;
+                                  font-weight: bold;
+                                  width: 100%;
+                                  text-align: center;">
+                            📋 My Orders
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

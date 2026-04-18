@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="our_mics">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="titlepage text_align_center">
+                    <h2>Product Detail</h2>
+                    <p>
+                        <a href="{% url 'shop' %}" style="color: purple;">Shop</a>
+                        &rsaquo;
+                        <a href="{% url 'products_by_category' product.category.slug %}" 
+                           style="color: purple;">
+                            {{ product.category.category_name }}
+                        </a>
+                        &rsaquo;
+                        {{ product.product_name }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Content -->
+        <div class="row mt-5 mb-5">
+
+            <!-- Product Image -->
+            <div class="col-md-6 text-center">
+                <div class="mics">
+                    <figure>
+                        {% if product.product_image %}
+                            <img class="img-fluid img_responsive"
+                                 src="{{ product.product_image.url }}"
+                                 alt="{{ product.product_name }}"
+                                 style="max-height: 400px; object-fit: contain;"/>
+                        {% else %}
+                            <img class="img-fluid img_responsive"
+                                 src="{% static 'images/mics_img2.jpg' %}"
+                                 alt="No image available"
+                                 style="max-height: 400px; object-fit: contain;"/>
+                        {% endif %}
+                    </figure>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-md-6 d-flex align-items-center">
+                <div style="width: 100%;">
+
+                    <!-- Product Name -->
+                    <h3 style="font-weight: bold;">
+                        {{ product.product_name }}
+                    </h3>
+
+                    <!-- Category Badge -->
+                    <span style="background: purple; color: #fff;
+                                 padding: 4px 14px; border-radius: 20px;
+                                 font-size: 13px;">
+                        {{ product.category.category_name }}
+                    </span>
+
+                    <hr style="border-color: purple;">
+
+                    <!-- Price -->
+                    <h4 style="color: #e91e8c; margin-top: 15px; font-weight: bold;">
+                        ₦{{ product.price }}
+                    </h4>
+
+                    <!-- Stock Status -->
+                    <p style="margin-top: 10px;">
+                        {% if product.is_available and product.stock > 0 %}
+                            <span style="color: #28a745; font-weight: bold;">
+                                ✅ In Stock ({{ product.stock }} available)
+                            </span>
+                        {% else %}
+                            <span style="color: #dc3545; font-weight: bold;">
+                                ❌ Out of Stock
+                            </span>
+                        {% endif %}
+                    </p>
+
+                    <!-- Description -->
+                    <p style="color: #555; margin-top: 15px; line-height: 1.8;">
+                        {{ product.description }}
+                    </p>
+
+                    <hr style="border-color: purple;">
+
+                    <!-- Quantity Selector + Add to Cart -->
+                    <!-- <div class="d-flex align-items-center mt-3"> -->
+
+                        <!-- Quantity -->
+                        <!-- <div class="input-group mr-3" style="width: 130px;">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary btn-sm"
+                                        type="button"
+                                        onclick="decreaseQty()">−</button>
+                            </div>
+                            <input type="number"
+                                   id="quantity"
+                                   value="1"
+                                   min="1"
+                                   max="{{ product.stock }}"
+                                   class="form-control form-control-sm text-center"/>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary btn-sm"
+                                        type="button"
+                                        onclick="increaseQty()">+</button>
+                            </div>
+                        </div> -->
+
+                        <!-- Add to Cart Button -->
+                         <!-- Quantity + Add to Cart Form -->
+<form action="{% url 'add_to_cart' product.id %}" method="POST">
+    {% csrf_token %}
+
+    <div class="d-flex align-items-center mt-3">
+
+        <!-- Quantity Selector -->
+        <div class="input-group mr-3" style="width: 130px;">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary btn-sm"
+                        type="button"
+                        onclick="decreaseQty()">−</button>
+            </div>
+            <input type="number"
+                   id="quantity"
+                   name="quantity"
+                   value="1"
+                   min="1"
+                   max="{{ product.stock }}"
+                   class="form-control form-control-sm text-center"/>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary btn-sm"
+                        type="button"
+                        onclick="increaseQty()">+</button>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit"
+                class="btn"
+                style="background: linear-gradient(to right, red, purple);
+                       color: #fff;
+                       padding: 8px 30px;
+                       border-radius: 25px;">
+            🛒 Add to Cart
+        </button>
+
+    </div>
+</form>
+                        
+                    </div>
+
+                    <!-- Back to Shop -->
+                    <div class="mt-4">
+                        <a href="{% url 'shop' %}"
+                           style="color: purple; text-decoration: none; font-weight: bold;">
+                            &larr; Back to Shop
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- End Product Content -->
+
+    </div>
+</div>
+
+<script>
+    function increaseQty() {
+        const qty = document.getElementById('quantity');
+        const max = parseInt(qty.getAttribute('max'));
+        if (parseInt(qty.value) < max) {
+            qty.value = parseInt(qty.value) + 1;
+        }
+    }
+
+    function decreaseQty() {
+        const qty = document.getElementById('quantity');
+        if (parseInt(qty.value) > 1) {
+            qty.value = parseInt(qty.value) - 1;
+        }
+    }
+</script>
+
+{% endblock content %}

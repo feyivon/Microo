@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="our_mics">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3" style="padding-bottom: 80px;">
+
+                <div class="titlepage text_align_center">
+                    <h2>Login</h2>
+                    <p>Welcome back! Please login to your account</p>
+                </div>
+
+                <!-- Messages -->
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+
+                    <!-- Email -->
+                    <div class="form-group mb-3">
+                        <label style="font-weight: bold;">Email Address</label>
+                        <input type="email"
+                               name="email"
+                               class="form-control"
+                               placeholder="Enter your email address"
+                               style="border: 2px solid purple;
+                                      border-radius: 10px;
+                                      padding: 10px;
+                                      width: 100%;"/>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group mb-3">
+                        <label style="font-weight: bold;">Password</label>
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               placeholder="Enter your password"
+                               style="border: 2px solid purple;
+                                      border-radius: 10px;
+                                      padding: 10px;
+                                      width: 100%;"/>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                            class="btn btn-block mt-3"
+                            style="background: linear-gradient(to right, red, purple);
+                                   color: #fff;
+                                   border-radius: 25px;
+                                   padding: 12px;
+                                   width: 100%;
+                                   font-weight: bold;
+                                   font-size: 16px;">
+                        Login
+                    </button>
+
+                    <!-- Links -->
+                    <p class="text-center mt-3">
+                        Don't have an account?
+                        <a href="{% url 'register' %}" style="color: purple; font-weight: bold;">
+                            Register here
+                        </a>
+                    </p>
+
+                    <p class="text-center mt-2">
+                        <a href="{% url 'password_reset' %}"
+                        style="color: purple; font-weight: bold;">
+                            Forgot Password?
+                        </a>
+                    </p>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

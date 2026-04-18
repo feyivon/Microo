@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- ✅ CSS Classes for timeline steps and text -->
+<style>
+    .step-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 20px;
+        background: #ddd;
+    }
+    .step-circle.active    { background: purple; }
+    .step-label            { margin-top: 8px; color: #888; font-weight: normal; }
+    .step-label.active     { color: purple; font-weight: bold; }
+</style>
+
+<div class="our_mics">
+    <div class="container" style="padding-bottom: 80px;">
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+
+                <!-- Title -->
+                <div class="titlepage text_align_center">
+                    <h2>📦 Track Your Order</h2>
+                    <p>Enter your Order ID to see the current status</p>
+                </div>
+
+                <!-- Messages -->
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+
+                <!-- Search Form -->
+                <div style="border: 2px solid purple;
+                            border-radius: 15px;
+                            padding: 30px;
+                            margin-top: 20px;">
+
+                    <form method="POST" action="{% url 'track_order' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label style="font-weight: bold;">Order ID</label>
+                            <input type="number"
+                                   name="order_id"
+                                   class="form-control"
+                                   placeholder="Enter your Order ID e.g 1"
+                                   style="border: 2px solid purple;
+                                          border-radius: 10px;
+                                          padding: 10px;
+                                          width: 100%;"/>
+                        </div>
+                        <button type="submit"
+                                class="btn btn-block mt-3"
+                                style="background: linear-gradient(to right, red, purple);
+                                       color: #fff;
+                                       border-radius: 25px;
+                                       padding: 12px;
+                                       width: 100%;
+                                       font-weight: bold;">
+                            🔍 Track Order
+                        </button>
+                    </form>
+
+                </div>
+
+                <!-- Order Result -->
+                {% if orders %}
+                <div style="border: 2px solid purple;
+                            border-radius: 15px;
+                            padding: 30px;
+                            margin-top: 30px;">
+
+                    <h4 style="font-weight: bold; color: purple;">
+                        Order #{{ orders.id }}
+                    </h4>
+
+                    <hr style="border-color: purple;">
+
+                    <!-- Status Timeline -->
+                    <h5 style="font-weight: bold; margin-bottom: 20px;">
+                        Order Status
+                    </h5>
+
+                    <div class="row text-center mb-4">
+
+                        <!-- Step 1 — Order Placed -->
+                        <div class="col-md-3">
+                            <div class="step-circle
+                                {% if orders.status == 'New' or orders.status == 'Accepted' or orders.status == 'Completed' %}
+                                    active
+                                {% endif %}">
+                                📋
+                            </div>
+                            <p class="step-label
+                                {% if orders.status == 'New' %}active{% endif %}">
+                                Order Placed
+                            </p>
+                        </div>
+
+                        <!-- Step 2 — Accepted -->
+                        <div class="col-md-3">
+                            <div class="step-circle
+                                {% if orders.status == 'Accepted' or orders.status == 'Completed' %}
+                                    active
+                                {% endif %}">
+                                ✅
+                            </div>
+                            <p class="step-label
+                                {% if orders.status == 'Accepted' %}active{% endif %}">
+                                Accepted
+                            </p>
+                        </div>
+
+                        <!-- Step 3 — On the Way -->
+                        <div class="col-md-3">
+                            <div class="step-circle
+                                {% if orders.status == 'Completed' %}active{% endif %}">
+                                🚚
+                            </div>
+                            <p class="step-label
+                                {% if orders.status == 'Completed' %}active{% endif %}">
+                                On the Way
+                            </p>
+                        </div>
+
+                        <!-- Step 4 — Delivered -->
+                        <div class="col-md-3">
+                            <div class="step-circle
+                                {% if orders.status == 'Completed' %}active{% endif %}">
+                                🎉
+                            </div>
+                            <p class="step-label
+                                {% if orders.status == 'Completed' %}active{% endif %}">
+                                Delivered
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Cancelled Alert -->
+                    {% if orders.status == 'Cancelled' %}
+                    <div class="alert text-center"
+                         style="background: #ffe0e0;
+                                border: 2px solid red;
+                                border-radius: 10px;
+                                color: red;
+                                font-weight: bold;">
+                        ❌ This order has been cancelled.
+                    </div>
+                    {% endif %}
+
+                    <hr style="border-color: purple;">
+
+                    <!-- Order Info -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Name:</strong> {{ orders.full_name }}</p>
+                            <p><strong>Phone:</strong> {{ orders.phone_number }}</p>
+                            <p>
+                                <strong>Payment:</strong>
+                                {% if orders.payment_method == 'paystack' %}
+                                    💳 Paystack
+                                {% else %}
+                                    💵 Pay on Delivery
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Address:</strong> {{ orders.address }}</p>
+                            <p><strong>City:</strong> {{ orders.city }}, {{ orders.state }}</p>
+                            <p><strong>Date:</strong> {{ orders.created_at|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+
+                    <hr style="border-color: purple;">
+
+                    <!-- Order Items -->
+                    <h5 style="font-weight: bold;">Items in this Order</h5>
+                    <table class="table table-bordered text-center mt-3">
+                        <thead style="background: purple; color: #fff;">
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in orders.orderitem_set.all %}
+                            <tr>
+                                <td class="align-middle">
+                                    {{ item.product.product_name }}
+                                </td>
+                                <td class="align-middle">
+                                    ₦{{ item.price }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ item.quantity }}
+                                </td>
+                                <td class="align-middle"
+                                    style="color: purple; font-weight: bold;">
+                                    ₦{{ item.sub_total }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot style="background: #f8f8f8;">
+                            <tr>
+                                <td colspan="3" class="text-right">
+                                    <strong>Grand Total</strong>
+                                </td>
+                                <td style="color: purple;
+                                           font-weight: bold;
+                                           font-size: 18px;">
+                                    ₦{{ orders.total }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Buttons -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <a href="{% url 'my_orders' %}"
+                               class="btn"
+                               style="border: 2px solid purple;
+                                      color: purple;
+                                      border-radius: 25px;
+                                      padding: 10px 25px;
+                                      font-weight: bold;
+                                      width: 100%;
+                                      text-align: center;">
+                                📋 My Orders
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'shop' %}"
+                               class="btn"
+                               style="background: linear-gradient(to right, red, purple);
+                                      color: #fff;
+                                      border-radius: 25px;
+                                      padding: 10px 25px;
+                                      font-weight: bold;
+                                      width: 100%;
+                                      text-align: center;">
+                                ← Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

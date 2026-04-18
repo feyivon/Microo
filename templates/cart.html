@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="our_mics">
+    <div class="container" style="padding-bottom: 80px;">
+
+        <!-- Title -->
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="titlepage text_align_center">
+                    <h2>Your Cart</h2>
+                    <p>Review your selected items below</p>
+                </div>
+            </div>
+        </div>
+
+        {% if cart_items %}
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <table class="table table-bordered text-center">
+                    <thead style="background: purple; color: #fff;">
+                        <tr>
+                            <th>Image</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <!-- Image -->
+                            <td class="align-middle">
+                                <img src="{{ item.product.product_image.url }}"
+                                     alt="{{ item.product.product_name }}"
+                                     style="height: 70px; object-fit: contain;"/>
+                            </td>
+
+                            <!-- Name -->
+                            <td class="align-middle">
+                                {{ item.product.product_name }}
+                            </td>
+
+                            <!-- Price -->
+                            <td class="align-middle">
+                                ₦{{ item.product.price }}
+                            </td>
+
+                            <!-- Quantity Controls -->
+                            <td class="align-middle">
+                                <a href="{% url 'remove_from_cart' item.product.id %}"
+                                   class="btn btn-sm btn-outline-secondary">−</a>
+                                <strong class="mx-2">{{ item.quantity }}</strong>
+                                <a href="{% url 'add_to_cart' item.product.id %}"
+                                   class="btn btn-sm btn-outline-secondary">+</a>
+                            </td>
+
+                            <!-- Subtotal -->
+                            <td class="align-middle" style="color: purple; font-weight: bold;">
+                                ₦{% if item.sub_total %}{{ item.sub_total }}{% else %}0.00{% endif %}
+                            </td>
+
+                            <!-- Remove -->
+                            <td class="align-middle">
+                                <a href="{% url 'remove_cart_item' item.product.id %}"
+                                   class="btn btn-sm"
+                                   style="background: red; color: #fff; border-radius: 20px;">
+                                    🗑 Remove
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    <!-- Total Row -->
+                    <tfoot style="background: #f8f8f8;">
+                        <tr>
+                            <td colspan="3" class="text-right align-middle">
+                                <strong>Total Items: {{ quantity }}</strong>
+                            </td>
+                            <td colspan="3" class="text-left align-middle">
+                                <strong style="color: purple; font-size: 20px;">
+                                    Total: ₦{{ total }}
+                                </strong>
+                            </td>
+                        </tr>
+
+                        <!-- Buttons Row -->
+                        <tr style="background: #fff; border: none;">
+
+                            <!-- Back to Shop -->
+                            <td colspan="3" class="text-left"
+                                style="border: none; padding-top: 20px;">
+                                <a href="{% url 'shop' %}"
+                                   class="btn"
+                                   style="border: 2px solid purple;
+                                          color: purple;
+                                          border-radius: 25px;
+                                          padding: 10px 25px;
+                                          font-weight: bold;">
+                                    ← Back to Shop
+                                </a>
+                            </td>
+
+                            <!-- ✅ Updated Checkout Button -->
+                            <td colspan="3" class="text-right"
+                                style="border: none; padding-top: 20px;">
+                                {% if request.user.is_authenticated %}
+                                    <a href="{% url 'checkout' %}"
+                                       class="btn"
+                                       style="background: linear-gradient(to right, red, purple);
+                                              color: #fff;
+                                              border-radius: 25px;
+                                              padding: 10px 30px;
+                                              font-weight: bold;">
+                                        Checkout →
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'login' %}"
+                                       class="btn"
+                                       style="background: linear-gradient(to right, red, purple);
+                                              color: #fff;
+                                              border-radius: 25px;
+                                              padding: 10px 30px;
+                                              font-weight: bold;">
+                                        🔒 Login to Checkout
+                                    </a>
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        {% else %}
+
+        <!-- Empty Cart -->
+        <div class="row mt-5" style="padding-bottom: 80px;">
+            <div class="col-md-12 text-center">
+                <p style="font-size: 18px; color: #888;">
+                    🛒 Your cart is empty.
+                </p>
+                <a href="{% url 'shop' %}"
+                   class="btn mt-3"
+                   style="background: linear-gradient(to right, red, purple);
+                          color: #fff;
+                          border-radius: 25px;
+                          padding: 10px 30px;">
+                    ← Start Shopping
+                </a>
+            </div>
+        </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock content %}

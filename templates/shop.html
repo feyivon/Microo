@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="our_mics">
+    <div class="container">
+
+        <!-- Title -->
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="titlepage text_align_center">
+                    <h2>Our Shop</h2>
+                    <p>There are many variations of passages of Lorem Ipsum available</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Dropdown + Product Count + View Cart -->
+        <div class="row mb-4 mt-3">
+
+            <!-- Category Dropdown -->
+            <div class="col-md-4">
+                <div class="dropdown">
+                    <button class="btn btn-dark dropdown-toggle"
+                            type="button"
+                            id="categoryDropdown"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        {% if selected_category %}
+                            {{ selected_category.category_name }}
+                        {% else %}
+                            All Categories
+                        {% endif %}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+                        <a class="dropdown-item {% if not selected_category %}active{% endif %}"
+                           href="{% url 'shop' %}">
+                            All Categories
+                        </a>
+                        {% for category in categories %}
+                        <a class="dropdown-item {% if selected_category.slug == category.slug %}active{% endif %}"
+                           href="{% url 'products_by_category' category.slug %}">
+                            {{ category.category_name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Count -->
+            <div class="col-md-4 d-flex align-items-center">
+                <p class="mb-0 text-muted">
+                    <strong>{{ product_count }}</strong>
+                    product{% if product_count != 1 %}s{% endif %} available
+                    {% if selected_category %}
+                        in <strong>{{ selected_category.category_name }}</strong>
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- ✅ View Cart Button — right side -->
+            <div class="col-md-4 d-flex align-items-center justify-content-end">
+                <a href="{% url 'cart' %}"
+                   class="btn"
+                   style="background: linear-gradient(to right, red, purple);
+                          color: #fff;
+                          border-radius: 25px;
+                          padding: 8px 25px;
+                          font-weight: bold;">
+                    🛒 View Cart
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Products Grid -->
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 col-sm-6 margin_bottom40">
+                <a href="{% url 'product_detail' product.category.slug product.slug %}"
+                   style="text-decoration: none; color: inherit;">
+                    <div id="ho_show" class="mics">
+                        <figure>
+                            {% if product.product_image %}
+                                <img class="img_responsive"
+                                     src="{{ product.product_image.url }}"
+                                     alt="{{ product.product_name }}"/>
+                            {% else %}
+                                <img class="img_responsive"
+                                     src="{% static 'images/mics_img2.jpg' %}"
+                                     alt="No image"/>
+                            {% endif %}
+                        </figure>
+                        <div class="mics_icon">
+                            <h4>{{ product.product_name }}</h4>
+                            <p>₦{{ product.price }}</p>
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+                <p class="text-center">No products available.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- ✅ CSS Classes for status badges -->
+<style>
+    .badge-new        { background: purple; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+    .badge-accepted   { background: blue;   color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+    .badge-completed  { background: green;  color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+    .badge-cancelled  { background: red;    color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+</style>
+
+<div class="our_mics">
+    <div class="container" style="padding-bottom: 80px;">
+
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+
+                <!-- Title -->
+                <div class="titlepage text_align_center">
+                    <h2>📋 My Orders</h2>
+                    <p>View all your past orders</p>
+                </div>
+
+                {% if orders %}
+                <table class="table table-bordered text-center mt-4">
+                    <thead style="background: purple; color: #fff;">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+
+                            <!-- Order ID -->
+                            <td class="align-middle">
+                                #{{ order.id }}
+                            </td>
+
+                            <!-- Date -->
+                            <td class="align-middle">
+                                {{ order.created_at|date:"d M Y" }}
+                            </td>
+
+                            <!-- Items Count -->
+                            <td class="align-middle">
+                                {{ order.orderitem_set.count }} item(s)
+                            </td>
+
+                            <!-- Total -->
+                            <td class="align-middle"
+                                style="color: purple; font-weight: bold;">
+                                ₦{{ order.total }}
+                            </td>
+
+                            <!-- Payment Method -->
+                            <td class="align-middle">
+                                {% if order.payment_method == 'paystack' %}
+                                    💳 Paystack
+                                {% else %}
+                                    💵 Pay on Delivery
+                                {% endif %}
+                            </td>
+
+                            <!-- ✅ Status Badge — fixed using CSS classes -->
+                            <td class="align-middle">
+                                <span class="badge-{{ order.status|lower }}">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+
+                            <!-- Track Button -->
+                            <td class="align-middle">
+                                <a href="{% url 'track_order' %}"
+                                   class="btn btn-sm"
+                                   style="background: linear-gradient(to right, red, purple);
+                                          color: #fff;
+                                          border-radius: 20px;
+                                          padding: 5px 15px;">
+                                    📦 Track
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% else %}
+
+                <!-- No Orders -->
+                <div class="text-center mt-5">
+                    <p style="font-size: 18px; color: #888;">
+                        You have no orders yet.
+                    </p>
+                    <a href="{% url 'shop' %}"
+                       class="btn mt-3"
+                       style="background: linear-gradient(to right, red, purple);
+                              color: #fff;
+                              border-radius: 25px;
+                              padding: 10px 30px;
+                              font-weight: bold;">
+                        ← Start Shopping
+                    </a>
+                </div>
+
+                {% endif %}
+
+                <!-- Back to Shop -->
+                <div class="mt-4">
+                    <a href="{% url 'shop' %}"
+                       style="color: purple;
+                              font-weight: bold;
+                              text-decoration: none;">
+                        ← Back to Shop
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}
