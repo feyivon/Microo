@@ -23,14 +23,15 @@
 
         <!-- Messages -->
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}" role="alert">
+        <div class="alert alert-{{ message.tags }}" role="alert"
+             style="border-radius: 10px; margin-bottom: 10px;">
             {{ message }}
         </div>
         {% endfor %}
 
         <div class="row mt-4">
 
-            <!-- Left — Shipping Details Form -->
+            <!-- Left — Shipping Form -->
             <div class="col-md-7">
                 <div style="border: 2px solid purple;
                             border-radius: 15px;
@@ -40,6 +41,7 @@
                         <i class="fa fa-truck"></i> Shipping Information
                     </h4>
 
+                    <!-- ✅ form method POST + csrf_token -->
                     <form method="POST" action="{% url 'checkout' %}">
                         {% csrf_token %}
 
@@ -54,7 +56,8 @@
                                    style="border: 2px solid purple;
                                           border-radius: 10px;
                                           padding: 10px;
-                                          width: 100%;"/>
+                                          width: 100%;"
+                                   required/>
                         </div>
 
                         <!-- Phone Number -->
@@ -68,7 +71,8 @@
                                    style="border: 2px solid purple;
                                           border-radius: 10px;
                                           padding: 10px;
-                                          width: 100%;"/>
+                                          width: 100%;"
+                                   required/>
                         </div>
 
                         <!-- Email -->
@@ -82,7 +86,8 @@
                                    style="border: 2px solid purple;
                                           border-radius: 10px;
                                           padding: 10px;
-                                          width: 100%;"/>
+                                          width: 100%;"
+                                   required/>
                         </div>
 
                         <!-- Address -->
@@ -95,7 +100,8 @@
                                    style="border: 2px solid purple;
                                           border-radius: 10px;
                                           padding: 10px;
-                                          width: 100%;"/>
+                                          width: 100%;"
+                                   required/>
                         </div>
 
                         <!-- City -->
@@ -108,7 +114,8 @@
                                    style="border: 2px solid purple;
                                           border-radius: 10px;
                                           padding: 10px;
-                                          width: 100%;"/>
+                                          width: 100%;"
+                                   required/>
                         </div>
 
                         <!-- State -->
@@ -121,7 +128,8 @@
                                    style="border: 2px solid purple;
                                           border-radius: 10px;
                                           padding: 10px;
-                                          width: 100%;"/>
+                                          width: 100%;"
+                                   required/>
                         </div>
 
                         <!-- Country -->
@@ -135,7 +143,8 @@
                                    style="border: 2px solid purple;
                                           border-radius: 10px;
                                           padding: 10px;
-                                          width: 100%;"/>
+                                          width: 100%;"
+                                   required/>
                         </div>
 
                         <hr style="border-color: purple;">
@@ -145,49 +154,44 @@
                             <i class="fa fa-credit-card"></i> Payment Method
                         </h4>
 
-                        <div class="form-group mb-3">
+                        <!-- Paystack -->
+                        <div style="border: 2px solid purple;
+                                    border-radius: 10px;
+                                    padding: 15px;
+                                    margin-bottom: 10px;">
+                            <label style="cursor: pointer; margin: 0;">
+                                <input type="radio"
+                                       name="payment_method"
+                                       value="paystack"
+                                       checked/>
+                                &nbsp;
+                                <strong>Paystack</strong>
+                                <small style="color: #888; margin-left: 10px;">
+                                    Pay securely with card or bank transfer
+                                </small>
+                            </label>
+                        </div>
 
-                            <!-- Paystack -->
-                            <div style="border: 2px solid purple;
-                                        border-radius: 10px;
-                                        padding: 15px;
-                                        margin-bottom: 10px;
-                                        cursor: pointer;">
-                                <label style="cursor: pointer; margin: 0;">
-                                    <input type="radio"
-                                           name="payment_method"
-                                           value="paystack"
-                                           checked/>
-                                    &nbsp;
-                                    <strong>Paystack</strong>
-                                    <small style="color: #888; margin-left: 10px;">
-                                        Pay securely with card or bank transfer
-                                    </small>
-                                </label>
-                            </div>
-
-                            <!-- Pay on Delivery -->
-                            <div style="border: 2px solid purple;
-                                        border-radius: 10px;
-                                        padding: 15px;
-                                        cursor: pointer;">
-                                <label style="cursor: pointer; margin: 0;">
-                                    <input type="radio"
-                                           name="payment_method"
-                                           value="pay_on_delivery"/>
-                                    &nbsp;
-                                    <strong>Pay on Delivery</strong>
-                                    <small style="color: #888; margin-left: 10px;">
-                                        Pay cash when your order arrives
-                                    </small>
-                                </label>
-                            </div>
-
+                        <!-- Pay on Delivery -->
+                        <div style="border: 2px solid purple;
+                                    border-radius: 10px;
+                                    padding: 15px;
+                                    margin-bottom: 20px;">
+                            <label style="cursor: pointer; margin: 0;">
+                                <input type="radio"
+                                       name="payment_method"
+                                       value="pay_on_delivery"/>
+                                &nbsp;
+                                <strong>Pay on Delivery</strong>
+                                <small style="color: #888; margin-left: 10px;">
+                                    Pay cash when your order arrives
+                                </small>
+                            </label>
                         </div>
 
                         <!-- Place Order Button -->
                         <button type="submit"
-                                class="btn btn-block mt-4"
+                                class="btn btn-block"
                                 style="background: linear-gradient(to right, red, purple);
                                        color: #fff;
                                        border-radius: 25px;
@@ -202,13 +206,11 @@
                 </div>
             </div>
 
-            <!-- ✅ Right — Order Summary -->
+            <!-- Right — Order Summary -->
             <div class="col-md-5">
                 <div style="border: 2px solid purple;
                             border-radius: 15px;
-                            padding: 30px;
-                            position: sticky;
-                            top: 20px;">
+                            padding: 30px;">
 
                     <h4 style="font-weight: bold; margin-bottom: 20px;">
                         <i class="fa fa-shopping-cart"></i> Order Summary
@@ -219,7 +221,6 @@
                     <div class="d-flex justify-content-between align-items-center mb-3"
                          style="border-bottom: 1px solid #eee; padding-bottom: 10px;">
 
-                        <!-- Image + Name -->
                         <div class="d-flex align-items-center">
                             <img src="{{ item.product.product_image.url }}"
                                  alt="{{ item.product.product_name }}"
@@ -238,7 +239,6 @@
                             </div>
                         </div>
 
-                        <!-- Item Subtotal -->
                         <p style="margin: 0; font-weight: bold; color: purple;">
                             ₦{{ item.sub_total }}
                         </p>
@@ -272,7 +272,7 @@
 
                     <!-- Back to Cart -->
                     <a href="{% url 'cart' %}"
-                       class="btn btn-block mt-4"
+                       class="btn btn-block mt-3"
                        style="border: 2px solid purple;
                               color: purple;
                               border-radius: 25px;
@@ -287,7 +287,6 @@
             </div>
 
         </div>
-        <!-- End Row -->
 
     </div>
 </div>

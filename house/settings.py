@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+     'rest_framework',
     'store',
     'accounts',
 ]
@@ -132,4 +133,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/accounts/login/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST          = 'smtp.gmail.com'
+EMAIL_PORT          = 587
+EMAIL_USE_TLS       = True
+EMAIL_HOST_USER     = 'ayovaughanfeyisan@gmail.com'      
+EMAIL_HOST_PASSWORD = 'wfnjehzlunrsmwsh'           
+DEFAULT_FROM_EMAIL  = 'ayovaughanfeyisan@gmail.com' 

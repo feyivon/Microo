@@ -18,7 +18,8 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
-from house.views import home
+from house.views import home, about, services, contact
+
 from store.views import shop
 from django.contrib.auth import views as auth_views
 
@@ -26,6 +27,10 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name= 'home'),
+    path('about/', about, name= 'about'),
+    path('services/', services, name= 'services'),
+    path('contact/', contact, name= 'contact'),
+    
     
     path('', include('store.urls')),
     path('', include('accounts.urls')),
